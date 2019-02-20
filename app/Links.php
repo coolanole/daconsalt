@@ -18,4 +18,9 @@ class Links extends Model
     }
 
     protected $fillable = ['url', 'is_private'];
+
+    public function redirects()
+    {
+        return $this->hasMany(Redirects::class, 'link_id');
+    }
 }
