@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Links;
-use Illuminate\Http\Request;
+use App\Jobs\ProcessLinkStatistics;
 
 class LinksController extends Controller
 {
     public function redirect(string $key)
     {
-        $links = Links::where('key', $key)->firstOrFail();
+        $link = Links::where('key', $key)->firstOrFail();
+        ProcessLinkStatistics::dispatch($link, [
+            'ip' => request()->ip(),
+            'useragent' => request()->userAgent()
+        ]);
 
-        return redirect($links->url);
+        return redirect($link->url);
     }
 }
